@@ -12,6 +12,9 @@ RUN npm run build
 # Production stage
 FROM node:18-alpine
 
+# Install dumb-init
+RUN apk add --no-cache dumb-init
+
 WORKDIR /app
 
 # Install PM2 globally
@@ -35,5 +38,8 @@ USER node
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# Use PM2 Runtime
+# Use dumb-init as the entry point
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+# Use PM2 Runtime as the command
 CMD ["./start.sh"]
