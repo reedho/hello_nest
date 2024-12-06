@@ -10,9 +10,10 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
       },
-      log_type: 'json',
+      log_type: 'raw',
       out_file: '/dev/null',
       error_file: '/dev/null',
+      color: 'false',
     },
   ],
 };
