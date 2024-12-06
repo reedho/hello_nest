@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
@@ -6,8 +6,8 @@ export class AppService {
     const result = await new Promise<string>((s, f) => {
       console.log('Begin processing....');
       setTimeout(() => {
-        console.log('Processing done.');
-        console.error('we are here');
+        Logger.log('Processing done.');
+        Logger.error('we are here');
         s('Hello World!, are you there?');
       }, 0);
     });
