@@ -27,7 +27,7 @@ COPY ecosystem.config.js ./
 COPY start.sh ./
 
 # Install production dependencies only
-RUN npm ci --only=production
+RUN npm ci --only=production --omit=dev
 
 # Make start script executable
 RUN chmod +x start.sh

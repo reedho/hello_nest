@@ -1,23 +1,44 @@
-version: '3.8'
-
 services:
   api:
     build: .
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - NODE_ENV=production
+      - PORT=3000
+      - AMQP_URL=amqp://guest:guest@rabbitmq:5672
+      - AMQP_EXCHANGE=app_exchange
+      - AMQP_QUEUE=app_queue
+      - AMQP_DLX=app_dlx
+      - AMQP_DLQ=app_dlq
+      - AMQP_MESSAGE_TTL=1000*60*60*24*7
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:3000/health"]
+      test: ['CMD', 'wget', '--spider', 'http://localhost:3000/health']
       interval: 10s
       timeout: 5s
       retries: 3
     restart: unless-stopped
-  deploy:
-    resources:
-      limits:
-        cpus: '1'
-        memory: 1G
-      reservations:
-        cpus: '0.5'
-        memory: 512M
+    depends_on:
+      - rabbitmq
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+  rabbitmq:
+    image: rabbitmq:4-management
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', 'http://localhost:15672/health']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
